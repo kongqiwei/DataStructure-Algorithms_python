@@ -1,3 +1,4 @@
+#主要对一个list的操作，比如插入，遍历，返回某个值，判断空，返回前驱，后继，长度等。
 #include<stdio.h>
 #ifdef SEQUENCELIST_H
 #define SEQUENCELIST_H
