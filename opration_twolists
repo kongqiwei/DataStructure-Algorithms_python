@@ -1,3 +1,4 @@
+#主要对两个链表的操作，比如合并，一种数组操作，一种指针操作，用指针其实更简单，但是需要更灵活而容易出错。
 #ifndef UNION_H
 #define UNION_H
 #include"C:\Users\USER\C_code\SequenceList.c"
