@@ -1,0 +1,256 @@
+#include<stdio.h>
+#ifdef SEQUENCELIST_H
+#define SEQUENCELIST_H
+#endif
+#include<stdlib.h>
+#define LIST_INIT_SIZE  100
+#define LISTINGCREMENT  10
+#ifndef LELEMTYPE_SQ  
+#define LELEMTYPE_SQ
+
+#define Wait(x)\
+{\
+   double _Loop_Num_;\
+   for(_Loop_Num_=0.01;_Loop_Num_<=100000*x;_Loop_Num_+=0.01)\
+     ;
+}//null   loop
+
+#define PressEnter\
+{\
+    fflush(stdin);\
+    printf("press  Enter...");\
+    getchar();\
+    fflush(stdin);\
+}
+typedef int LElemType_Sq;
+int CmpGeater(int e,int data);
+void PrintElem(int e);
+typedef int Status;
+typedef struct
+{
+    int *elem;
+    int length;
+    int listsize;
+}SqList;
+Status InitList_Sq(SqList *L);
+void ClearList_Sq(SqList *L);
+void DestroyList_Sq(SqList *L);
+Status ListEmpty_Sq(SqList L);
+int ListLength_Sq(SqList L);
+Status GetElem_Sq(SqList L,int i,LElemType_Sq *e);
+int LocateElem1_sq(SqList L,LElemType_Sq e,Status(Compare)(LElemType_Sq));
+Status PriorElem_sq(SqList L,LElemType_Sq cur_e,LElemType_Sq *pre_e);
+Status NextElem_Sq(SqList L,LElemType_Sq cur_e,LElemType_Sq *next_e);
+Status ListInsert_Sq(SqList *L,int i,LElemType_Sq e);
+Status ListDelete_Sq(SqList *L,int i,LElemType_Sq *e);
+Status ListTraverse_Sq(SqList L,void(Visit)(LElemType_Sq));
+
+Status InitList_Sq(SqList *L)
+{
+    (*L).elem=(LElemType_Sq*)malloc(LIST_INIT_SIZE*sizeof(LElemType_Sq));
+    if(!(*L).elem)
+        exit(OVERFLOW);
+    (*L).length=0;
+    (*L).listsize=LIST_INIT_SIZE;
+    return OK;
+}
+
+void ClearList_Sq(SqList *L)
+{
+    (*L).length=0;
+}
+
+void DestroyList_Sq(SqList *L)
+{
+    free((*L).elem);
+    (*L).elem=NULL;
+    (*L).length=0;
+    (*L).listsize=0;
+}
+
+Status ListEmpty_Sq(SqList L)
+{
+    return L.length==0?TRUE:FALSE;
+}
+
+int ListLength_Sq(SqList L)
+{
+    return l.length;
+}
+
+Status GetElem_Sq(SqList L,int i,LElemType_Sq *e)
+{
+    if(i<1||i>L.length)
+        return ERROR;
+    else
+        *e=L.elem[i-1];
+    return OK;
+}
+
+int LocateElem1_sq(SqList L,LElemType_Sq e,Status(Compare)(LElemType_Sq))
+{
+    int i=1;
+    while(i<=L.length&&!Compare(a,L.elem[i-1]))
+        ++i;
+    if (i<=L.length)
+        return i;
+    else
+        return 0;
+}
+
+Status PriorElem_sq(SqList L,LElemType_Sq cur_e,LElemType_Sq *pre_e)
+{
+    int i=1;
+    if(L.elem[0]!=cur_e)
+    {
+        while(i<L.length&&L.elem[i]!=cur_e)
+            ++i;
+        if (i<L.length)
+        {
+            *pre_e=L.elem[i-1];
+            return OK;
+        }
+    }
+    return ERROR;
+}
+
+Status NextElem_Sq(SqList L,LElemType_Sq cur_e,LElemType_Sq *next_e)
+{
+    int i=0;
+    while(i<L.length&&L.elem!=cur_e)
+        ++i;
+    if(i<L.length-1)
+    {
+        *next_e=L.elem[i+1];
+        return OK;
+    }
+    return ERROR;
+}
+
+Status ListInsert_Sq(SqList *L,int i,LElemType_Sq e)
+{
+    LElemType_Sq *newbase;
+    LElemType_Sq *p,*q;
+    if(i<1||i>(*L).length+1)
+        return ERROR;
+    if((*L).length>=(*L).listsize)
+    {
+        newbase-(LElemType_Sq*)realloc((*L).elem,((*L).listsize+LISTINCREMENT)*sizeof(LElemType_Sq));
+        if(!newbase)
+            exit(OVERFLOW);
+        (*L).elem=newbase;
+        (*L).listsize+=LISTINCREMENT;
+    }
+    q=&(*L).elem[i-1];
+    for (p=&(*L).elem[(*L).length-1];p>=q;--p)
+        *(p+1)=*p;
+    *q=e;
+    (*L).length++;
+    return OK;
+}
+
+Status ListDelete_Sq(SqList *L,int i,LElemType_Sq *e)
+{
+    int j;
+    LElemType_Sq *q,*p;
+    if(i<1||i>(*L).length)
+        return ERROR;
+    p=&(*L).elem[i-1];
+    *e=*p;
+    q=(*L).elem+(*L).length-1;
+    for (++p,p<=q;p++)
+        *(p-1)=*p;
+    (*L).length--;
+    return OK;
+}
+
+Status ListTraverse_Sq(SqList L,void(Visit)(LElemType_Sq))
+{
+    int i;
+    for (i=0;i<L.length;i++)
+        Visit(L.elem[i]);
+    return OK;
+}
+int main (int argc,char **argv)
+{
+    SqList L;
+    int i;
+    int e;
+    printf("InitList_Sq测试\n");
+    {
+        printf("初始化顺序表L\n");
+        InitList_Sq(&L);
+        printf("\n");
+    }
+    PressEnter;
+    printf("函数ListEmpty_Sq测试...\n");
+    ListEmpty_Sq(L) ? printf("L为空！！\n"):printf("L不为空\n");
+    printf("\n");
+    PressEnter;
+    printf("函数ListInsert_Sq测试...\n");
+    for(i=1;i<=6;i++)
+    {
+        printf("作为示范，在L的第%d个位置插入\"%d\"..\n",i,2*i);
+        ListEmpty_Sq(&L,i,2*i);
+    }
+    printf("\n");
+    printf("L中的元素为：L=\n");
+    listTraverse_Sq(L,PriorElem);
+    printf("\n\n");
+    PressEnter;
+    printf("函数ListInsert_Sq测试。。。\n");
+    i=ListLength_Sq(L);
+    printf("L的长度%d\n",i);
+    printf("\n\n");
+    PressEnter;
+    printf("函数ListInsert_Sq测试。。。\n");
+    listDelete_Sq(&L,6,&e);
+    printf("L中的元素为：L=\n");
+    listTraverse_Sq(L,PrintElem);
+    printf("\n\n");
+    PressEnter;
+    printf("函数GetElem_Sq测试。。。\n");
+    GetElem_Sq(L,4,&e);
+    printf("L中的第4个元素为&d\n",e);
+    printf("\n");
+    PressEnter;
+    printf("函数locatedElem_Sq测试...\n");
+    i=LocateElem_Sq(L,7,CmpGeater);
+    printf("L中的第一个元素大于7 的元素的位置为%d\n", i);
+    printf("\n");
+    PressEnter;
+    printf("函数priorElem_Sq测试。。。\n");
+    PriorElem_Sq(L,6,&e);
+    printf("元素6的前驱为&d\n",e);
+    printf("\n");
+    PressEnter;
+    printf("函数NextElem_Sq测试。。。\n");
+    nextElem_Sq(L,6,&e);
+    printf("元素6的后继%d\n",e);
+    printf("\n");
+    PressEnter;
+    printf("函数ClearList_Sq测试...\n");
+    printf("清空L前\n");
+    ListEmpty_Sq(L)?printf("L为空！！\n"):printf("L不为空\n");
+    ClearList_Sq(&L);
+    printf("清空后\n");
+    ListEmpty_Sq(L)?printf("L为空！！！\n"):printf("L不为空\n");
+    printf("\n");
+    printf("函数DestroyList_Sq测试\n");
+    printf("销毁L前：\n");
+    L.elem ? printf("L存在\n"):printf("L不存在\n");
+    DestroyList_Sq(&L);
+    printf("销毁L后\n");
+    L.elem?printf("L存在！\n"):printf("L不存在！\n");
+    printf("\n");
+    PressEnter;
+    return 0;
+    int CmpGeater(int e,int data)
+    {
+        return data>=TRUE:FALSE;
+    }
+    void PrintElem(int e)
+    {
+        printf("%d\n", e);
+    }
+}
