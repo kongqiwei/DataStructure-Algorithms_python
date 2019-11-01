@@ -1,0 +1,86 @@
+#ifndef UNION_H
+#define UNION_H
+#include"C:\Users\USER\C_code\SequenceList.c"
+void UNION(SqList *La,SqList Lb);
+Status equal(LElemType_Sq e1,LElemType_Sq e2);
+#endif
+
+void Union(SqList *L,SqList Lb)
+{
+	int La_len,Lb_len;
+	int i;
+	LElemType_Sq e;
+	La_len=Listlength_Sq(*L);
+	Lb_len=Listlength_Sq(*L);
+	for(i=1;i<Lb_len;i++)
+	{
+		GetElem_Sq(Lb,i,&e);
+		if(!LocateElem_Sq(*La,e,equal))
+			ListInsert_Sq(La,++La_len,e);
+	}
+}
+
+Status equal(LElemType_Sq e1,LElemType_Sq e2)
+{
+	return e1==e2?TRUE:FAlSE;
+}
+void MergeSqList_l(SqList La,SqList Lb,SqList *Lc)
+{
+	int La_len,Lb_len;
+	int i,j,k;
+	LElemType_Sq ai,bj;
+	i=j=1;
+	k=0;
+	InitList_Sq(Lc);
+	La_len=Listlength_Sq(La);
+	Lb_len=Listlength_Sq(Lb);
+	while(i<La_len&&j<Lb_len)
+	{
+		GetElem_Sq(La,i,&ai);
+		GetElem_Sq(Lb,j,&bj);
+		if (ai<bj)
+		{
+			ListInsert_Sq(Lc,++k,ai);
+			i++;
+		}
+		else
+		{
+			ListInsert_Sq(Lc,++k,bj);
+			j++
+		}
+	}
+	while(i<La_len)
+	{
+		GetElem_Sq(La,i++,&ai);
+		ListInsert_Sq(Lc,++k,ai);
+	}
+	while(j<Lb_len)
+	{
+		GetElem_Sq(Lb,j++,&bj);
+		ListInsert_Sq(Lc,++k,bj);
+	}
+}
+void MergeSqList_2(SqList La,SqList Lb,SqList Lc)
+{
+	LElemType_Sq *pa,*pb,*pc;
+	LElemType_Sq *pa_last,*pb_last;
+	pa=La.elem;
+	pb=Lb.elem;
+	(*Lc).listsize=(*Lc).length=La.length+Lb.length;
+	pc=(*Lc).elem=(LElemType_Sq*)malloc((*Lc).listsize*sizeof(LElemType_Sq));
+	if(!pc)
+		exit(overFlow);
+	pa_last=La.elem+La.length-1;
+	pb_last=Lb.elem+Lb.length-1;
+	while(pa<=pa_last&&pb<=pb_last)
+	{
+		if(*pa<=*pb)
+			*pc++=*pa++;
+		else
+			*pc++=*pb++;
+	}
+	while(pa<=pa_last)
+		*pc++=*pa++;
+	while(pb<=pb_last)
+		*pc++=*pb++;
+}
