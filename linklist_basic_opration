@@ -1,0 +1,361 @@
+#ifndef UNION_H
+#define UNION_H
+#include"C:\Users\USER\C_code\SequenceList.c"
+void UNION(SqList *La,SqList Lb);
+Status equal(LElemType_Sq e1,LElemType_Sq e2);
+#endif
+typedef int LElemType_L
+void Union(SqList *L,SqList Lb)
+{
+	int La_len,Lb_len;
+	int i;
+	LElemType_Sq e;
+	La_len=Listlength_Sq(*L);
+	Lb_len=Listlength_Sq(*L);
+	for(i=1;i<Lb_len;i++)
+	{
+		GetElem_Sq(Lb,i,&e);
+		if(!LocateElem_Sq(*La,e,equal))
+			ListInsert_Sq(La,++La_len,e);
+	}
+}
+
+Status equal(LElemType_Sq e1,LElemType_Sq e2)
+{
+	return e1==e2?TRUE:FAlSE;
+}
+
+typedef struct LNode
+{
+	LElemType_Sq data;
+	struct LNode next;
+}LNode;
+
+void MergeSqList_l(SqList La,SqList Lb,SqList *Lc)
+{
+	int La_len,Lb_len;
+	int i,j,k;
+	LElemType_Sq ai,bj;
+	i=j=1;
+	k=0;
+	InitList_Sq(Lc);
+	La_len=Listlength_Sq(La);
+	Lb_len=Listlength_Sq(Lb);
+	while(i<La_len&&j<Lb_len)
+	{
+		GetElem_Sq(La,i,&ai);
+		GetElem_Sq(Lb,j,&bj);
+		if (ai<bj)
+		{
+			ListInsert_Sq(Lc,++k,ai);
+			i++;
+		}
+		else
+		{
+			ListInsert_Sq(Lc,++k,bj);
+			j++
+		}
+	}
+	while(i<La_len)
+	{
+		GetElem_Sq(La,i++,&ai);
+		ListInsert_Sq(Lc,++k,ai);
+	}
+	while(j<Lb_len)
+	{
+		GetElem_Sq(Lb,j++,&bj);
+		ListInsert_Sq(Lc,++k,bj);
+	}
+}
+void MergeSqList_2(SqList La,SqList Lb,SqList Lc)
+{
+	LElemType_Sq *pa,*pb,*pc;
+	LElemType_Sq *pa_last,*pb_last;
+	pa=La.elem;
+	pb=Lb.elem;
+	(*Lc).listsize=(*Lc).length=La.length+Lb.length;
+	pc=(*Lc).elem=(LElemType_Sq*)malloc((*Lc).listsize*sizeof(LElemType_Sq));
+	if(!pc)
+		exit(overFlow);
+	pa_last=La.elem+La.length-1;
+	pb_last=Lb.elem+Lb.length-1;
+	while(pa<=pa_last&&pb<=pb_last)
+	{
+		if(*pa<=*pb)
+			*pc++=*pa++;
+		else
+			*pc++=*pb++;
+	}
+	while(pa<=pa_last)
+		*pc++=*pa++;
+	while(pb<=pb_last)
+		*pc++=*pb++;
+}
+void MergeSqList_L(LinkList La,LinkList *Lb,LinkList *Lc)
+{
+	LinkList pa,pb,pc;
+	pa=La->next;
+	pb=(*Lb)->next;
+	pc=*Lc=La;
+	while(pa&&pb)
+	{
+		if(pa->data<=pb->data)
+		{
+			pc->next=pa;
+			pc=pa;
+			pa=pa->next;
+		}
+		else
+		{
+			pc->next=pb;
+			pc=pb;
+			pb=pb->next;
+		}
+	}
+	pc->next=pa?pa:pb;
+	free(*Lb);
+	*Lb=NULL;
+}
+Status InitList_L(LinkList *L)
+{
+	(*L)=(LinkList)malloc(sizeof(LNode));
+	if(!(*L))
+		exit(0);
+	(*L)->next=NULL;
+	return 1;
+}
+
+Status ClearList_L(LinkList)
+{
+	LinkList pre,p;
+	if(!L)
+		return ERROR;
+	pre=L->next;
+	while(pre)
+	{
+		p=pre->next;
+		free(pre);
+		pre=p;
+	}
+	L->next=NULL;
+	return 1;
+}
+void DestroyList_L(LinkList *L)
+{
+	LinkList p=*L;
+	while(p)
+	{
+		p=(*L)->next;
+		free(*L);
+		(*L)=p;
+	}
+}
+Status ListEmpty_L(LinkList L)
+{
+	if(L!=NULL&&L->next==NULL)
+		return TRUE;
+	else
+		return FAlSE;
+}
+int Listlength_L(LinkList L)
+{
+	LinkList p;
+	int i;
+	if(L)
+	{
+		i=0;
+		p=L->next;
+		while(p)
+		{
+			i++;
+			p=p->next;
+		}
+	}
+	return i;
+}
+Status GetElem_L(LinkList L,int i,LElemType_L)
+{
+	int j;
+	LinkList p=L->next;
+	j=1;
+	p=L->next;
+	while(p&&j<i)
+	{
+		j++;
+		p=p->next;
+	}
+	if(!p||j>i)
+		return ERROR;
+	*e=p->next;
+	return 1;
+}
+int LocateElem_L(LinkList L,LElemType_L e,Status(Compare)(LElemType_L,LElemType_L))
+{
+	int i;
+	LinkList p;
+	i=-1;
+	if(L)
+	{
+		i=0;
+		p=L->next;
+		while(p)
+		{
+			i++;
+			if(!Compare(e,p->data))
+				p=p->next;
+			else
+				break;
+		}
+	}
+	return i;
+}
+
+Status PriorElem_L(LinkList L,LElemType_L cur_e,ListEmpty_L *next_e)
+{
+	LinkList p,suc;
+	if(L)
+	{
+		p=p->next;
+		if(p->data!=cur_e)
+		{
+			while(p->next)
+			{
+				suc=p->next;
+				if(suc->data==cur_e)
+				{
+					*pre_e=p->data;
+					return 1;
+				}
+				p=suc;
+			}
+		}
+	}
+	return ERROR;
+}
+Status NextElem_L(LinkList L,LElemType_L cur_e,LElemType_L *next_e)
+{
+	LinkList p,suc;
+	if(L)
+	{
+		p=L->next;
+		while(p&&p->next)
+		{
+			suc=p->next;
+			if(suc&&p->data==cur_e)
+			{
+				*next_e=suc->data;
+				return 1;
+			}
+			if(suc)
+				p=suc;
+			else
+				break;
+		}
+	}
+	return ERROR;
+}
+Status InitList_L(LinkList L,int i,LElemType_L e)
+{
+	LinkList p,s;
+	int j;
+	p=L;
+	j=0;
+	while(p&&j<i-1)
+	{
+		p=p->next;
+		++j;
+	}
+	if(!p||j>i-1)
+		return ERROR;
+	s=(LinkList)malloc(sizeof(LNode));
+	if(!s)
+		exit(overFlow);
+	s->data=e;
+	s->next=p->next;
+	p->next=s;
+	return 1;
+}
+Status ListDelete_L(InitList_L L,LElemType_L *e)
+{
+	LinkList pre,p;
+	int j;
+	pre=L;
+	j=1;
+	while(pre->next&&j<i)
+	{
+		pre=pre->next;
+		++j;
+	}
+	if(!pre->next||j>i)
+		return ERROR;
+	p=pre->next;
+	pre->next=p->next;
+	*e=p->data;
+	free(p);
+	return 1;
+}
+Status ListTraverse_L(LinkList L,void(visit)(LElemType_L))
+{
+	LinkList p;
+	if(!L)
+		return ERROR;
+	else
+		p=L->next;
+	while(p)
+	{
+		visit(p->data);
+		p=p->next;
+	}
+	return 1;
+}
+Status CreateList_HL(FILE *fp,LinkList *L,int n)
+{
+	int i;
+	LinkList p;
+	LElemType_L tmp;
+	*L=(LinkList)malloc(sizeof(LNode);
+	if(!(*L))
+		exit(overFlow);
+	(*L)->next=NULL;
+	for (i=1;i<=n;++i)
+	{
+		if(scanf(fp,"%d",&tmp)==1)
+		{
+			p=(LinkList)malloc(sizeof(LNode));
+			if(!p)
+				exit(overFlow);
+			p->data=tmp;
+			p->next=(*L)->next;
+			(*L)->next=p;
+		}
+		else
+			return ERROR;
+	}
+	return 1;
+}
+Status CreateList_TL(FILE *fp,LinkList *L,int n)
+{
+	int i;
+	LinkList p,q;
+	LElemType_L tmp;
+	*L=(LinkList)malloc(sizeof(LNode));
+	if(!(*L))
+		exit(overFlow);
+	(*L)->next=NULL;
+	for(i=1,q=*L;i<=n;++i)
+	{
+		if(scanf(fp,"%d",&tmp)==1)
+		{
+			p=(LinkList)malloc(sizeof(LNode));
+			if(!p)
+				exit(overFlow);
+			p->data=tmp;
+			q->next=p;
+			q=q->next;
+		}
+		else
+			return ERROR;
+	}
+	q->next=NULL;
+	return 1;
+}
