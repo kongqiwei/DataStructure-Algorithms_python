@@ -73,3 +73,63 @@ Status StackTraverse_Sq(SqStack S,void(visit)(ELemtype_Sq))
 		visit(*p++);
 	return 1;
 }
+//一些应用
+//进制转化
+//模拟行编辑输入
+void conversion(int i)
+{
+	SqStack S;
+	ELemtype_Sq e;
+	InitStack_Sq(&S);
+	printf("十进制%d转化为八进制\n",i);
+	while(i)
+	{
+		Push_Sq(&S,i%8);
+		i=i/8;
+	}
+	while(!StackEmpty_Sq(S))
+	{
+		Pop_Sq(&S,&e);
+		printf("%d\n",e);
+	}
+}
+void LineEdit(char Buffer[])
+{
+	SqStack S;
+	ELemtype_Sq e;
+	int i;
+	char ch;
+	InitStack_Sq(&S);
+	i=0;
+	ch=Buffer[i++];
+	while(ch!='\0')
+	{
+		while(ch!='\0'&&ch!='\n')
+		{
+			switch(ch)
+			{
+				case '#':Pop_Sq(&S,&e);
+				       break;
+				case '@':ClearStack_Sq(&S);
+				      break;
+				default: Push_Sq(&S,ch);
+			}
+		}
+		if(ch=='\n')
+		{
+				Push_Sq(&S,ch);
+				StackTraverse_Sq(S,Print);
+				ClearStack_Sq(&S);
+				ch=Buffer[i++];
+		}
+	}
+	if(ch=='\0')
+	{
+			StackTraverse_Sq(S,Print);
+			DestroyStack_Sq(&S);
+	}
+}
+void Print(ELemtype_Sq e)
+{
+	printf("%c",e);
+}
